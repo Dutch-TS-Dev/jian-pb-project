@@ -19,7 +19,7 @@ const petType = [
     "Affe 🐒 (seine Intelligenz ist höher)",
     "Hase 🐰 (seine Zuneigung ist höher)",
 ];
-let petName = "";
+
 let whichPet;
 let maxPetHP;
 let maxEnemyHP;
@@ -94,7 +94,7 @@ async function printPetSelection() {
     // 打印最终选择
     console.log("You selected:", petType[selectedIndex]);
     console.log(chalk.bold.greenBright("Kluge Wahl"));
-    petName = readlineSync.question("Wie heißt dein Haustier? ");
+    const input = readlineSync.question("Wie heißt dein Haustier? ");
     console.log(
         `Bist du bereit? 🥳 ${chalk.bold.blueBright(
             petName
@@ -113,8 +113,12 @@ function startGame() {
 printWelcomeMessage();
 
 let itemsList = { apples: 0, flours: 0, sugar: 0 };
+
 class MainMap {
-    constructor() {
+    constructor(petName) {
+
+        this.petName = "";
+        
         this.map = [
             "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
             "X                                                              🎄                           X",
@@ -147,18 +151,50 @@ class MainMap {
     }
 
     generateApples(numApples) {
+
+        const arr = new Array(numApples + 3).fill('').forEach(
+                (_,i) => {
+                    // 随机生成苹果的 x 和 y 坐标 (x: 52~74; y:5~15)
+                   const newCoordinates = {
+                        x: Math.floor(Math.random() * (74 - 52)) + 52; // 在地图上52到74的数中间随机产生一个x的坐标,
+                        y: Math.floor(Math.random() * (15 - 5)) + 5; // 在地图上5到15的数中间随机产生一个y的坐标,
+                    };
+        
+                    // this.applePositions = i < numApples ? [...this.applePositions, newCoordinates], this.applePositions;
+
+                    // this.enemyPosition 
+        
+                    //前面的那些给苹果
+                    if (i < numApples) {
+                        this.applePositions.push(newCoordinates);
+                    }
+                    else {
+                        this.enemyPosition.push(newCoordinates); 
+                    } // 最后的3个给怪兽
+
+                    // oscar
+                    if (i < numApples) {
+                        return this.applePositions.push(newCoordinates);
+                    }
+                    return this.enemyPosition.push(newCoordinates); 
+
+                }
+        );
+
         for (let i = 0; i < numApples + 3; i++) {
             // 随机生成苹果的 x 和 y 坐标 (x: 52~74; y:5~15)
             const randomX = Math.floor(Math.random() * (74 - 52)) + 52; // 在地图上52到74的数中间随机产生一个x的坐标
             const randomY = Math.floor(Math.random() * (15 - 5)) + 5; // 在地图上5到15的数中间随机产生一个y的坐标
 
             //前面的那些给苹果
-            if (i < numApples)
+            if (i < numApples) {
                 this.applePositions.push({
                     x: randomX,
                     y: randomY,
-                });
-            else this.enemyPosition.push({ x: randomX, y: randomY }); //最后的3个给怪兽
+                });}
+            else {
+                this.enemyPosition.push({ x: randomX, y: randomY }); 
+            }//最后的3个给怪兽
         }
     }
 
